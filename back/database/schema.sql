@@ -1,0 +1,29 @@
+-- RASCUNHO INICIAL: alinhar nomes/campos com o restante do grupo antes de usar.
+
+CREATE TABLE IF NOT EXISTS pacientes (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  nome VARCHAR(120) NOT NULL,
+  cpf VARCHAR(11) UNIQUE,
+  telefone VARCHAR(20) NOT NULL UNIQUE,
+  criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS dentistas (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  nome VARCHAR(120) NOT NULL,
+  especialidade VARCHAR(120) NOT NULL,
+  ativo BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+CREATE TABLE IF NOT EXISTS agendamentos (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  paciente_id BIGINT NOT NULL REFERENCES pacientes(id),
+  dentista_id BIGINT NOT NULL REFERENCES dentistas(id),
+  procedimento VARCHAR(120) NOT NULL,
+  data_consulta DATE NOT NULL,
+  hora_consulta TIME NOT NULL,
+  origem VARCHAR(20) NOT NULL DEFAULT 'WHATSAPP',
+  status VARCHAR(20) NOT NULL DEFAULT 'CONFIRMADO',
+  criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT uq_dentista_horario UNIQUE (dentista_id, data_consulta, hora_consulta)
+);
